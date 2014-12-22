@@ -943,7 +943,26 @@ class AnsibleModule(object):
                                     self.fail_json(msg="unable to evaluate dictionary for %s" % k)
                                 self.params[k] = result
                         elif '=' in value:
-                            self.params[k] = dict([x.strip().split("=", 1) for x in value.split(",")])
+                            fields = []
+                            field_buffer = []
+                            in_quote = False
+                            for c in value.strip():
+                                if not in_quote and c in ('\'', '"'):
+                                    in_quote = c
+                                elif in_quote and in_quote == c:
+                                    in_quote = False
+                                elif not in_quote and c in (',', ' '):
+                                    field = ''.join(field_buffer)
+                                    if field:
+                                        fields.append(field)
+                                    field_buffer = []
+                                else:
+                                    field_buffer.append(c)
+
+                            field = ''.join(field_buffer)
+                            if field:
+                                fields.append(field)
+                            self.params[k] = dict([x.split("=", 1) for x in fields])
                         else:
                             self.fail_json(msg="dictionary requested, could not parse JSON or key=value")
                     else:
