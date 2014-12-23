@@ -946,8 +946,14 @@ class AnsibleModule(object):
                             fields = []
                             field_buffer = []
                             in_quote = False
+                            in_escape = False
                             for c in value.strip():
-                                if not in_quote and c in ('\'', '"'):
+                                if in_escape:
+                                    field_buffer.append(c)
+                                    in_escape = False
+                                elif c == '\\':
+                                    in_escape = True
+                                elif not in_quote and c in ('\'', '"'):
                                     in_quote = c
                                 elif in_quote and in_quote == c:
                                     in_quote = False
@@ -962,7 +968,7 @@ class AnsibleModule(object):
                             field = ''.join(field_buffer)
                             if field:
                                 fields.append(field)
-                            self.params[k] = dict([x.split("=", 1) for x in fields])
+                            self.params[k] = dict(x.split("=", 1) for x in fields)
                         else:
                             self.fail_json(msg="dictionary requested, could not parse JSON or key=value")
                     else:
