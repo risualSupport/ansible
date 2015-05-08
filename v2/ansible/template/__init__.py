@@ -33,6 +33,7 @@ from ansible.template.vars import AnsibleJ2Vars
 from ansible.utils.debug import debug
 
 from numbers import Number
+from types import NoneType
 
 __all__ = ['Templar']
 
@@ -41,7 +42,7 @@ __all__ = ['Templar']
 SINGLE_VAR = re.compile(r"^{{\s*(\w*)\s*}}$")
 
 # Primitive Types which we don't want Jinja to convert to strings.
-NON_TEMPLATED_TYPES = ( bool, Number )
+NON_TEMPLATED_TYPES = ( bool, Number, NoneType )
 
 JINJA2_OVERRIDE = '#jinja2:'
 JINJA2_ALLOWED_OVERRIDES = ['trim_blocks', 'lstrip_blocks', 'newline_sequence', 'keep_trailing_newline']

@@ -5,6 +5,10 @@ Ansible Changes By Release
 
 Major Changes:
     - big_ip modules now support turning off ssl certificate validation (use only for self signed)
+ * big_ip modules now support turning off ssl certificate validation (use only for self signed)
+ * template code now retains types for bools, Numbers and nulls instead of turning them into strings
+   If you need the old behaviour, quote the value and it will get passed around as a string. In the
+   case of nulls, the output used to be an empty string.
 
     - template code now retains types for bools and Numbers instead of turning them into strings
       - If you need the old behaviour, quote the value and it will get passed around as a string
